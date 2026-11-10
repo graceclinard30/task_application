@@ -7,3 +7,5 @@ The idea came from a challenge my previous manager faced: keeping track of reque
 Through this project, I practiced Python debugging, Flask template rendering, HTML and CSS, Jinja2 syntax, and database operations with SQLAlchemy. I built the application without AI-generated code to give myself hands-on experience working through problems and understanding how the pieces connect.
 
 While a task checklist is a familiar concept, I am proud to have built a working solution inspired by a real workplace need.
+
+Note: This is a current project that I am expanding on, there are known bugs in the application.
