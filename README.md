@@ -1,11 +1,22 @@
 # Task Checklist
 
-I built a small Flask application that allows associate analysts to submit tasks in a consistent format so their supervisors can review, prioritize, and mark them complete.
+A Python web application built with Flask and SQLAlchemy to centralize task submissions, support supervisor review, and track completion.
 
-The idea came from a challenge my previous manager faced: keeping track of requests from multiple associates and organizing them in one place. I wanted to turn that everyday frustration into a working application while building my Python skills.
+## Business Problem
 
-Through this project, I practiced Python debugging, Flask template rendering, HTML and CSS, Jinja2 syntax, and database operations with SQLAlchemy. I built the application without AI-generated code to give myself hands-on experience working through problems and understanding how the pieces connect.
+The project was inspired by a manager’s challenge coordinating requests from multiple associate analysts. I built a shared workflow where associates can submit tasks consistently and supervisors can review, prioritize, and mark them complete.
 
-While a task checklist is a familiar concept, I am proud to have built a working solution inspired by a real workplace need.
+## Technical Implementation
 
-Note: This is a current project that I am expanding on, there are known bugs in the application.
+- Developed Python application logic and Flask routes to handle task submissions and updates.
+- Used SQLAlchemy to manage database records and task completion status.
+- Built dynamic interfaces using Jinja2 templates, HTML, and CSS.
+- Debugged form handling, template rendering, and database persistence.
+
+## Technology Stack
+
+Python · Flask · SQLAlchemy · Jinja2 · HTML · CSS
+
+## Project Status
+
+Active development. Core task submission and tracking functionality is implemented, with ongoing work to resolve bugs and improve reliability.
