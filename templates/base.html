@@ -1,12 +1,38 @@
+<!-- templates/base.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css')}}">
+    <meta name="theme-color" content="#142e38">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/styles.css') }}">
+
     {% block head %}{% endblock %}
 </head>
 <body>
+    <a class="skip-link" href="#main-content">Skip to content</a>
+
+    <header class="app-header">
+        <div class="header-inner">
+            <a class="brand" href="{{ url_for('index') }}">
+                <span class="brand-mark" aria-hidden="true">✓</span>
+                Task Checklist
+            </a>
+
+            <span class="header-caption">
+                A clearer view of the work ahead.
+            </span>
+        </div>
+    </header>
+
     {% block body %}{% endblock %}
+
+    <footer class="app-footer">
+        Task Checklist
+        <span aria-hidden="true">·</span>
+        Submit. Prioritize. Complete.
+    </footer>
 </body>
 </html>
