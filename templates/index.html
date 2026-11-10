@@ -1,38 +1,239 @@
-<!-- templates/base.html -->
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#142e38">
+{% extends 'base.html' %}
 
-    <link rel="stylesheet"
-          href="{{ url_for('static', filename='css/styles.css') }}">
+{% block head %}
+<title>Task Checklist | Team workspace</title>
+{% endblock %}
 
-    {% block head %}{% endblock %}
-</head>
-<body>
-    <a class="skip-link" href="#main-content">Skip to content</a>
+{% block body %}
+{% set task_list = tasks|list %}
+{% set critical_count = task_list|selectattr('priority', 'equalto', 'Critical')|list|length %}
+{% set high_count = task_list|selectattr('priority', 'equalto', 'High')|list|length %}
 
-    <header class="app-header">
-        <div class="header-inner">
-            <a class="brand" href="{{ url_for('index') }}">
-                <span class="brand-mark" aria-hidden="true">✓</span>
-                Task Checklist
-            </a>
-
-            <span class="header-caption">
-                A clearer view of the work ahead.
-            </span>
+<main id="main-content" class="workspace">
+    <section class="page-heading" aria-labelledby="page-title">
+        <div>
+            <p class="eyebrow">TEAM WORKSPACE</p>
+            <h1 id="page-title">Keep the next step clear.</h1>
+            <p class="intro">
+                One place for associate requests and supervisor review.
+            </p>
         </div>
-    </header>
 
-    {% block body %}{% endblock %}
+        <div class="workspace-status">
+            <span class="status-dot" aria-hidden="true"></span>
+            Active task queue
+        </div>
+    </section>
 
-    <footer class="app-footer">
-        Task Checklist
-        <span aria-hidden="true">·</span>
-        Submit. Prioritize. Complete.
-    </footer>
-</body>
-</html>
+    <section class="summary-grid" aria-label="Task overview">
+        <div class="summary-card">
+            <span>Open tasks</span>
+            <strong>{{ task_list|length }}</strong>
+            <small>Awaiting completion</small>
+        </div>
+
+        <div class="summary-card">
+            <span>Critical priority</span>
+            <strong>{{ critical_count }}</strong>
+            <small>Review these first</small>
+        </div>
+
+        <div class="summary-card">
+            <span>High priority</span>
+            <strong>{{ high_count }}</strong>
+            <small>Keep on your radar</small>
+        </div>
+    </section>
+
+    <div class="workspace-grid">
+        <aside class="panel submission-panel" aria-labelledby="new-task-title">
+            <div class="panel-heading">
+                <span class="section-kicker">01 / CAPTURE</span>
+                <h2 id="new-task-title">Submit a task</h2>
+                <p>Give your supervisor the details they need to help.</p>
+            </div>
+
+            <form action="{{ url_for('index') }}"
+                  method="POST"
+                  class="task-form">
+
+                <div class="field">
+                    <label for="username">
+                        Your name
+                        <span class="required">(required)</span>
+                    </label>
+                    <input
+                        type="text"
+                        id="username"
+                        name="username"
+                        maxlength="100"
+                        autocomplete="name"
+                        placeholder="e.g., Jordan Taylor"
+                        required>
+                </div>
+
+                <div class="field">
+                    <label for="priority">
+                        Priority
+                        <span class="required">(required)</span>
+                    </label>
+                    <select id="priority" name="priority" required>
+                        <option value="" disabled selected>
+                            Choose a priority
+                        </option>
+                        <option value="Critical">Critical</option>
+                        <option value="High">High</option>
+                        <option value="Medium">Medium</option>
+                        <option value="Low">Low</option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label for="issuetype">
+                        Issue type
+                        <span class="required">(required)</span>
+                    </label>
+                    <select id="issuetype" name="issuetype" required>
+                        <option value="" disabled selected>
+                            Choose an issue type
+                        </option>
+                        <option value="Computer Issues - Work Stoppage">
+                            Computer Issues - Work Stoppage
+                        </option>
+                        <option value="Ticket Issues - Work Stoppage">
+                            Ticket Issues - Work Stoppage
+                        </option>
+                        <option value="Computer Issues - Non Work Stoppage">
+                            Computer Issues - Non Work Stoppage
+                        </option>
+                        <option value="Ticket Issues - Non Work Stoppage">
+                            Ticket Issues - Non Work Stoppage
+                        </option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label for="description">
+                        What do you need help with?
+                        <span class="required">(required)</span>
+                    </label>
+                    <textarea
+                        id="description"
+                        name="description"
+                        rows="4"
+                        maxlength="200"
+                        placeholder="Describe the issue and how it affects your work."
+                        aria-describedby="description-help"
+                        required></textarea>
+
+                    <small id="description-help" class="field-help">
+                        Keep it brief: up to 200 characters.
+                    </small>
+                </div>
+
+                <button class="submit-button" type="submit">
+                    Submit task
+                    <span aria-hidden="true">＋</span>
+                </button>
+            </form>
+        </aside>
+
+        <section class="panel queue-panel" aria-labelledby="queue-title">
+            <div class="queue-heading">
+                <div>
+                    <span class="section-kicker">02 / REVIEW</span>
+                    <h2 id="queue-title">
+                        Open tasks
+                        <span class="count-badge">
+                            {{ task_list|length }}
+                        </span>
+                    </h2>
+                </div>
+                <span class="queue-note">All priorities</span>
+            </div>
+
+            <p class="queue-description">
+                Review requests and mark resolved tasks complete.
+            </p>
+
+            {% if task_list %}
+            <div class="table-container">
+                <table>
+                    <caption class="sr-only">
+                        Open associate requests, their priorities,
+                        issue types, and completion actions.
+                    </caption>
+
+                    <thead>
+                        <tr>
+                            <th scope="col">Request</th>
+                            <th scope="col">Priority</th>
+                            <th scope="col">Issue type</th>
+                            <th scope="col">
+                                <span class="sr-only">Action</span>
+                            </th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for task in task_list %}
+                        <tr>
+                            <td class="request-cell">
+                                <span class="task-meta">
+                                    #{{ task.ticket }}
+                                    <span aria-hidden="true">/</span>
+                                    {{ task.username }}
+                                </span>
+                                <p class="task-description">
+                                    {{ task.description }}
+                                </p>
+                            </td>
+
+                            <td data-label="Priority">
+                                <span class="priority priority-{{ task.priority|lower }}">
+                                    {{ task.priority }}
+                                </span>
+                            </td>
+
+                            <td class="issue-cell" data-label="Issue type">
+                                {{ task.issuetype }}
+                            </td>
+
+                            <td class="action-cell">
+                                <form
+                                    action="{{ url_for('remove_task', ticket=task.ticket) }}"
+                                    method="POST">
+                                    <button
+                                        class="complete-button"
+                                        type="submit"
+                                        aria-label="Mark task {{ task.ticket }} by {{ task.username }} complete">
+                                        <span aria-hidden="true">✓</span>
+                                        Done
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="queue-footer">
+                <span class="status-dot" aria-hidden="true"></span>
+                Marking a task Done removes it from this queue.
+            </div>
+
+            {% else %}
+            <div class="empty-state">
+                <span class="empty-icon" aria-hidden="true">✓</span>
+                <h3>A clear queue. A fresh start.</h3>
+                <p>
+                    No open tasks right now.
+                    Use the form to submit the next request.
+                </p>
+            </div>
+            {% endif %}
+        </section>
+    </div>
+</main>
+{% endblock %}
